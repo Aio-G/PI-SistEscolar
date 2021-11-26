@@ -572,13 +572,16 @@ int addMat(int x)
         case 1:
             if(curso[x].quantMat == QMATERIAS)
             {
-                printf("Erro: Numero maximo de materias antingido\n");
+                printf("Erro: Limite de materias atingido\n");
                 sleep();
                 continue;
             }
             printf("Digite o nome da Materia: ");
             lt();
+            while(strlen(curso[x].materias[curso[x].quantMat]) < 3){
             fgets(curso[x].materias[curso[x].quantMat],50,stdin);
+            if(strlen(curso[x].materias[curso[x].quantMat]) < 3){printf("Erro: O nome da materia deve possuir mais de 3 caracteres");sleep();
+            }}
             curso[x].quantMat += 1;
             break;
 
@@ -867,11 +870,10 @@ int gerenNotas()
     }
     alID = RAtoID(RAluno);
     notas[alID].RA = RAluno;
-    do
-    {
+    do{
         lt();
         CMDLIMP();
-        printf("Cursos:\n");
+        printf("Materias:\n");
         for(int x=0; x < curso[csID].quantMat; x++)
         {
             printf("[ %d ] %s \n",(x+1),curso[csID].materias[x] );
@@ -879,13 +881,16 @@ int gerenNotas()
         printf("[ 0 ] Sair");
         printf("\nSelecione: ");
         scanf(" %d",&opt2);
+        if(opt < 0 || opt2 > curso[csID].quantMat){
+            printf("Erro: Materia inexistente\n");
+            sleep();
+            continue;
+        }
         opt2 -=1;
-        if(opt2 == -1)
-        {
+        if(opt2 == -1){
             break;
         }
-        do
-        {
+        do{
             CMDLIMP();
             divMed =0;
             for(int z=0;z < curso[csID].qNotas[opt2];z++){
@@ -900,7 +905,7 @@ int gerenNotas()
             }
             printf("[ Media: %0.2f ]",notas[alID].media[opt2]);
             printf("\n[ 0 ] Sair\n");
-            printf("Selecione o numero da nota: ");
+            printf("Digite o numero da nota: ");
             scanf(" %d",&opt);
             if(opt < 0 || opt > curso[csID].qNotas[opt2])
             {
@@ -914,7 +919,7 @@ int gerenNotas()
             {
                 break;
             }
-            printf("Digite a nota: ");
+            printf("Digite o valor da nota: ");
             scanf(" %f",&nota);
             if(nota < 0 || nota > 10)
             {
