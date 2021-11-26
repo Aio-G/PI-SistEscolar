@@ -17,8 +17,8 @@ int gCCurs = 0;
 int gCAlun = 0;
 //Funcoes declaradas
 int gerenAlu();int listAlun();int addAluno();int pesqAlun();int listarAlnRemv();int editAlun(unsigned int RA);
-int gerenCurs();int addCurso();int listarCursos();int remvCurs();int listarRemovidos();int editCurs();int pesqCurso();
-int gerenNotas();int alunosCurso(int aCurso);int setqNotas();_Bool checarRA(unsigned int RA);_Bool checarCurso(int IDcurso);
+int gerenCurs();int addCurso();int listarCursos();int remvCurs();int listarRemovidos();int editCurs();int pesqCurso();int reativCurso();
+int gerenNotas();int alunosCurso(int aCurso);int setqNotas();_Bool checarRA(unsigned int RA);_Bool checarCurso(int IDcurso);void onoffcurs();
 int editMat(int ID);int setEndr(int IDAluno);int RAtoID(unsigned int RA);char *printG(char *texto);int scanfint(bool permitirNegativo);
 
 unsigned int gerarRA(int nAlun,int idCurso);
@@ -132,7 +132,7 @@ int gerenCurs()
     while(opt != 0)
     {
         CMDLIMP();
-        printf("[ 1 ] Adicionar Curso\n[ 2 ] Editar Curso\n[ 3 ] Listar Cursos\n[ 4 ] Remover Curso\n[ 5 ] Informacoes do Curso\n[ 6 ] Definir quantidade de notas\n[ 0 ] Voltar\nDigite a opcao: ");
+        printf("[ 1 ] Adicionar Curso\n[ 2 ] Editar Curso\n[ 3 ] Listar Cursos\n[ 4 ] Desativar/Reativar Curso\n[ 5 ] Informacoes do Curso\n[ 6 ] Definir quantidade de notas\n[ 0 ] Voltar\nDigite a opcao: ");
         lt();
         scanf(" %d", &opt);
         switch(opt)
@@ -163,7 +163,8 @@ int gerenCurs()
         case 4:
             if(!gCCurs == 0)
             {
-                remvCurs();
+                lt();
+                onoffcurs();
             }
             else
             {
@@ -197,6 +198,7 @@ int gerenCurs()
 
 int gerenAlu()
 {
+    int listReturn;
     int opt = -1,rra;
     if(gCCurs < 1)
     {
@@ -233,15 +235,16 @@ int gerenAlu()
             break;
 
         case 5://Remover/Readicionar Aluno
-            printf("[ 1 ] Desativar\n[ 2 ] Reativar\nDigite a opcao: ");
+            printf("[ 1 ] Desativar\n[ 2 ] Reativar\n[ 0 ] Sair\nDigite a opcao: ");
             opt = -1;
             lt();
-            scanf(" %d",&opt);
+            opt = scanfint(false);
             switch(opt)
             {
             case 1:
                 printf("Removendo aluno...\n");
-                listAlun();
+                listReturn = listAlun();
+                if(listReturn == 0){break;}
                 printf("Digite o RA do aluno: ");
                 scanf(" %d",&rra);
                 aluno[RAtoID(rra)].ativo = false;
@@ -254,8 +257,8 @@ int gerenAlu()
                 scanf(" %d",&rra);
                 aluno[RAtoID(rra)].ativo = true;
                 break;
-
             }
+            opt = -1;
             break;
 
         default:
@@ -318,7 +321,7 @@ int addAluno()
             strcpy(notDef,curso[aluno[nAluno].idCurso].nome);
         }
 
-        printf("Adicionar dados:\n      RA : %d \n[ 1 ] Nome: %s\n[ 2 ] CPF: %s\n[ 3 ] Email: %s\n[ 4 ] Curso: %s\n[ 5 ] Telefone: %s\n[ 6 ] Endereco\n[ 9 ] Cancelar\n[ 0 ] Salvar e Sair\nSelecione a opcao: ",aluno[nAluno].RA,printG(aluno[nAluno].nome),printG(aluno[nAluno].cpf),printG(aluno[nAluno].email),printG(notDef),printG(aluno[nAluno].telefone));
+        printf("Adicionar dados:\n      RA: %d \n[ 1 ] Nome: %s\n[ 2 ] CPF: %s\n[ 3 ] Email: %s\n[ 4 ] Curso: %s\n[ 5 ] Telefone: %s\n[ 6 ] Endereco\n[ 9 ] Cancelar\n[ 0 ] Salvar e Sair\nSelecione a opcao: ",aluno[nAluno].RA,printG(aluno[nAluno].nome),printG(aluno[nAluno].cpf),printG(aluno[nAluno].email),printG(notDef),printG(aluno[nAluno].telefone));
         lt();
         scanf(" %d",&opt);
         switch(opt)
@@ -418,7 +421,7 @@ int addCurso()
 
         printf("Adicionando curso\nID do curso: %02d\n\n[ 1 ] Nome: %s\n",gCCurs,printG(curso[gCCurs].nome));
         printf("[ 2 ] Tipo: %s\n[ 3 ] Periodo: %s\n",printG(curso[gCCurs].tipo),periodos[curso[gCCurs].periodo]);
-        printf("[ 4 ] Materias\n[ 0 ] Salvar e Sair\n[ 9 ] Cancelar\nSelecione a opcao que deseja adicionar: ");
+        printf("[ 4 ] Materias\n[ 0 ] Salvar e Sair\n[ 9 ] Cancelar\nDigite a opcao: ");
         lt();
         scanf(" %d",&opt);
         switch (opt)
@@ -481,7 +484,7 @@ int remvCurs()
     int temp = -1;
     listarCursos();
 
-    printf("Digite o ID do curso a ser removido: ");
+    printf("Digite o ID do curso a ser desativado: ");
     scanf(" %d", &temp);
     if(temp > gCCurs || temp < 0)
     {
@@ -490,7 +493,7 @@ int remvCurs()
         return 0;
     }
     curso[temp].ativo = false;
-    printf("O Curso %s foi removido\n",printG(curso[temp].nome));
+    printf("O Curso %s foi desativado\n",printG(curso[temp].nome));
     system("pause");
     return 0;
 }
@@ -511,8 +514,8 @@ int editCurs(int ID)
     {
         lt();
         CMDLIMP();
-        printf("Editando curso...\nID: %02d\n[ 1 ] Nome: %s\n[ 2 ] Tipo",ID,curso[ID].nome);
-        printf("\n[ 3 ] Periodo %s\n[ 4 ] Materias\n[ 0 ] Salvar e Sair\nSelecione a opcao que deseja adicionar: ",periodos[curso[ID].periodo]);
+        printf("Editando curso...\nID: %02d\n[ 1 ] Nome: %s\n[ 2 ] Tipo: %s",ID,curso[ID].nome,periodos[curso[ID].periodo]);
+        printf("\n[ 3 ] Periodo: %s\n[ 4 ] Materias\n[ 0 ] Salvar e Sair\nDigite a opcao que deseja adicionar: ",periodos[curso[ID].periodo]);
         scanf(" %d",&opt);
         switch(opt)
         {
@@ -680,7 +683,7 @@ int listAlun()
             printf("RA: %d | Nome: %s | Curso: %s\n",aluno[x].RA,printG(aluno[x].nome),printG(curso[aluno[x].idCurso].nome));
         }
     }
-    return 0;
+    return 1;
 }
 
 
@@ -825,7 +828,7 @@ int listarAlnRemv()
     {
         if(!aluno[x].ativo)
         {
-            printf("RA: %d | Nome: %sCurso: %s\n",aluno[x].RA,printG(aluno[x].nome),printG(curso[aluno[x].idCurso].nome));
+            printf("RA: %d | Nome: %s | Curso: %s\n",aluno[x].RA,printG(aluno[x].nome),printG(curso[aluno[x].idCurso].nome));
         }
     }
     return 0;
@@ -987,7 +990,7 @@ int editAlun(unsigned int RA)
     do
     {
         CMDLIMP();
-        printf("Editando dados:\n\n[ 1 ] Nome: %s\n[ 2 ] CPF: %s\n[ 3 ] Email: %s\n[ 4 ] Curso: %s\n[ 5 ] Telefone: %s\n[ 6 ] Endereco\n[ 0 ] Salvar e Sair\nSelecione a opcao: ",printG(aluno[nAluno].nome),printG(aluno[nAluno].cpf),printG(aluno[nAluno].email),printG(curso[aluno[nAluno].idCurso].nome),printG(aluno[nAluno].telefone));
+        printf("Editando dados:\n\n[ 1 ] Nome: %s\n[ 2 ] CPF: %s\n[ 3 ] Email: %s\n[ 4 ] Curso: %s\n[ 5 ] Telefone: %s\n[ 6 ] Endereco\n[ 0 ] Salvar e Sair\nDigite a opcao: ",printG(aluno[nAluno].nome),printG(aluno[nAluno].cpf),printG(aluno[nAluno].email),printG(curso[aluno[nAluno].idCurso].nome),printG(aluno[nAluno].telefone));
         lt();
         scanf(" %d",&opt);
         switch(opt)
@@ -1150,8 +1153,8 @@ char *printG(char *texto)
 }
 
 
-int scanfint(bool permitirNegativo)
-{
+int scanfint(bool permitirNegativo){
+    lt();
     char scanfi[64];
     char* convert;
     while (1)
@@ -1187,3 +1190,56 @@ int scanfint(bool permitirNegativo)
     return 0;
 }
 
+int reativCurso(){
+    int temp = -1,x;
+    for(x = 0;x< gCCurs;x++){
+        if(!curso[x].ativo){
+            printf("ID: %02d || AR: %02d || ",curso[x].id,curso[x].alunosAtivos);//ID do Curso e Quantidade de alunos ativos
+            printf("Nome: %s\n",printG(curso[x].nome));
+        }
+    }
+
+
+
+    printf("Digite o ID do curso a ser reativado: ");
+    scanf(" %d", &temp);
+    if(temp > gCCurs || temp < 0)
+    {
+        printf("Erro: Curso inexistente\n");
+        system("pause");
+        return 0;
+    }
+    curso[temp].ativo = true;
+    printf("O Curso %s foi reativado\n",printG(curso[temp].nome));
+    system("pause");
+    return 0;
+}
+
+
+void onoffcurs(){
+    int opt;
+    do{
+    lt();
+    CMDLIMP();
+    printf("Desativar/Reativar cursos:\n[ 1 ] Desativar\n[ 2 ] Reativar\n[ 0 ] Sair\nDigite a opcao: ");
+    opt = scanfint(false);
+    if(opt < 0 || opt > 2){
+        printf("Erro: Opcao inexistente");
+        sleep();
+        continue;
+    }
+    switch(opt){
+        case 1:
+        remvCurs();
+        break;
+
+        case 2:
+        reativCurso();
+        break;
+
+    }
+
+
+
+    }while(opt != 0);
+}
