@@ -83,7 +83,7 @@ int main()
         CMDLIMP();
         printf("[ 1 ] Gerenciar Cursos\n[ 2 ] Gerenciar Alunos\n[ 3 ] Gerenciar notas\n[ 0 ] Sair\n");
         printf("Digite a opcao: ");
-        scanf(" %d",&primOpt);
+        primOpt = scanfint(false);
         printf("\n");
         switch(primOpt)
         {
