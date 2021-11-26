@@ -550,6 +550,7 @@ int editCurs(int ID)
 int addMat(int x)
 {
     short unsigned int opt;
+    char vazio[3];
     do
     {
         CMDLIMP();
@@ -579,16 +580,19 @@ int addMat(int x)
             }
             printf("Digite o nome da Materia: ");
             lt();
-            while(strlen(curso[x].materias[curso[x].quantMat]) < 3){
             fgets(curso[x].materias[curso[x].quantMat],50,stdin);
-            if(strlen(curso[x].materias[curso[x].quantMat]) < 3){printf("Erro: O nome da materia deve possuir mais de 3 caracteres");sleep();
-            }}
-            curso[x].quantMat += 1;
+            if(strlen(curso[x].materias[curso[x].quantMat]) < 3){
+                strcpy(curso[x].materias[curso[x].quantMat],vazio);
+                continue;
+            }else{
+                curso[x].quantMat += 1;
+            }
             break;
 
         case 2:
             if(curso[x].quantMat > 0)
             {
+                strcpy(curso[x].materias[curso[x].quantMat],vazio);
                 curso[x].quantMat -= 1;
                 printf("Removendo: %s\n",curso[x].materias[curso[x].quantMat]);
             }
@@ -881,7 +885,7 @@ int gerenNotas()
         }
         printf("[ 0 ] Sair");
         printf("\nSelecione: ");
-        scanf(" %d",&opt2);
+        opt2 = scanfint(false);
         if(opt2 < 0 || opt2 > curso[csID].quantMat){
             printf("Erro: Materia inexistente\n");
             sleep();
@@ -907,7 +911,7 @@ int gerenNotas()
             printf("[ Media: %0.2f ]",notas[alID].media[opt2]);
             printf("\n[ 0 ] Sair\n");
             printf("Digite o numero da nota: ");
-            scanf(" %d",&opt);
+            opt = scanfint(false);
             if(opt < 0 || opt > curso[csID].qNotas[opt2])
             {
                 printf("Erro: Nota Inexistente");
