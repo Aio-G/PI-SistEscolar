@@ -80,6 +80,7 @@ int main()
     int primOpt = -1;
     do
     {
+        lt();
         CMDLIMP();
         printf("[ 1 ] Gerenciar Cursos\n[ 2 ] Gerenciar Alunos\n[ 3 ] Gerenciar notas\n[ 0 ] Sair\n");
         printf("Digite a opcao: ");
@@ -881,7 +882,7 @@ int gerenNotas()
         printf("[ 0 ] Sair");
         printf("\nSelecione: ");
         scanf(" %d",&opt2);
-        if(opt < 0 || opt2 > curso[csID].quantMat){
+        if(opt2 < 0 || opt2 > curso[csID].quantMat){
             printf("Erro: Materia inexistente\n");
             sleep();
             continue;
