@@ -1,5 +1,4 @@
-# PI-SistEscolar
-Programa em Linguagem C.
-Projeto Integrador - 4 Semestre Sistemas de informação
-FAM - Faculdade de Americana
+Programa em Linguagem C.<br />
+Projeto Integrador - 4 Semestre Sistemas de informação<br />
+FAM - Faculdade de Americana<br />
 [Download](https://github.com/Aio-G/PI-SistEscolar/releases/download/Release/ProjInt.exe)
