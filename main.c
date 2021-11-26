@@ -911,7 +911,9 @@ int gerenNotas()
             printf("[ Media: %0.2f ]",notas[alID].media[opt2]);
             printf("\n[ 0 ] Sair\n");
             printf("Digite o numero da nota: ");
+            lt();
             opt = scanfint(false);
+            lt();
             if(opt < 0 || opt > curso[csID].qNotas[opt2])
             {
                 printf("Erro: Nota Inexistente");
@@ -925,7 +927,9 @@ int gerenNotas()
                 break;
             }
             printf("Digite o valor da nota: ");
+            lt();
             scanf(" %f",&nota);
+            lt();
             if(nota < 0 || nota > 10)
             {
                 printf("Erro: Nota invalida");
